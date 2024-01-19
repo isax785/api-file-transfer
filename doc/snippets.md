@@ -34,6 +34,7 @@ return {"message": "return from the server"}
 
 Client:
 ```python
+file_path, _ = QFileDialog.getOpenFileName(self, 'Choose Excel File', '', 'Excel Files (*.xlsx *.xls)')
 files = {'file': open(file_path, 'rb')}
 dict_api = {'dict_login': self.dict_login}
 data = {'dict_api': json.dumps(dict_api)}
@@ -57,6 +58,7 @@ file_content = file.read()
 
 Client
 ```python
+file_path, _ = QFileDialog.getSaveFileName(self, 'Save Excel File', '', 'Excel Files (*.xlsx)')
 response = requests.get(url)
 local_file_path = 'downloaded_file.txt'
 with open(local_file_path, 'wb') as local_file:
