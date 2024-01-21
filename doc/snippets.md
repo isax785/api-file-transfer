@@ -1,4 +1,18 @@
-## Snippets
+# Snippets
+
+- [ ] split **Snippets** into multiple sections
+
+- [ ] load file from folder
+- [ ] save (`.write`) file on disk
+- [ ] browse folders and files
+- [ ] create/delete folder (`os`, `sys`)
+
+## `PyQt5`
+
+- [ ] open/save file
+- [ ] widgets
+
+## `requests`
 
 *dictionary only*
 
@@ -15,7 +29,6 @@ Server:
 dict_api = request.get_json()
 return {"message": "return from the server"}
 ```
-
 
 *file + dictionary from client*
 
@@ -38,7 +51,6 @@ dict_api = json.loads(request.form['dict_api'])
 file = request.files['file']
 file_content = file.read()
 ```
-
 
 *file + dictionary* from server
 - [ ] `???` check reliability

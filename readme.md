@@ -1,5 +1,7 @@
 # APIs File Transfer with PyQt5
 
+- [ ] copy here Obsidian notes
+
 This is a playground repo aimed at explaining how to transfer files between a client and a server.
 
 Here:

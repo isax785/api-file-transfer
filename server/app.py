@@ -6,7 +6,7 @@ from flask import Flask, request
 app = Flask(__name__)
 
 
-@app.route(f"/download_dict", methods=['GET'])
+@app.route("/download_dict", methods=['GET'])
 def download_dict():
     date = datetime.now().strftime("%d/%m/%Y")
     time = datetime.now().strftime("%H:%M:%S")
@@ -14,12 +14,32 @@ def download_dict():
     return {'message': message}
 
 
-@app.route(f"/upload_dict", methods=['POST'])
+@app.route("/upload_dict", methods=['POST'])
 def upload_dict():
     req = request.get_json()
     text = req['text']
     message = f"Your message '{text}' was rd by the server and returned."
     return {'message': message}
+
+
+@app.route("/download_file", methods=['GET'])
+def download_file():
+    pass
+
+
+@app.route("/upload_file", methods=['POST'])
+def upload_file():
+    pass
+
+
+@app.route("/download_dict_file", methods=['GET'])
+def download_dict_file():
+    pass
+
+
+@app.route("/upload_dict_file", methods=['POST'])
+def upload_dict_file():
+    pass
 
 
 if __name__ == "__main__":
