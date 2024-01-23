@@ -1,10 +1,12 @@
 from datetime import datetime
-from flask import Flask, request
+from flask import Flask, request, send_file
+import os
 
 # LOCALHOST = return f'http://127.0.0.1:5000'
 
-app = Flask(__name__)
+CUR_DIR = os.path.dirname(os.path.abspath(__file__))
 
+app = Flask(__name__)
 
 @app.route("/download_dict", methods=['GET'])
 def download_dict():
@@ -24,7 +26,10 @@ def upload_dict():
 
 @app.route("/download_file", methods=['GET'])
 def download_file():
-    pass
+    file_path = os.path.join(CUR_DIR, "res/download_from_server.txt")
+    dt = datetime.now().strftime("%d%m%Y-%H%M%S")
+    file_name = f"{dt} File from Server"
+    return send_file(file_path, as_attachment=True, download_name=file_name) 
 
 
 @app.route("/upload_file", methods=['POST'])

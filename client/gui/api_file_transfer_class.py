@@ -52,7 +52,10 @@ class MainWindow(QMainWindow):
 
     def download_file(self):
         req = requests.get(DWN_F_URL)
-        pass
+        filename = req.headers._store['content-disposition'][1].split("filename=")[1].replace('"','')
+        file_path, _ = QFileDialog.getSaveFileName(self, 'Save Help', filename, 'txt (*.txt)')
+        with open(file_path, 'wb') as file:
+            file.write(req.content)
 
     def upload_file(self):
         # upload any kind of file

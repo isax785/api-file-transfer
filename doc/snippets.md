@@ -6,6 +6,8 @@
 - [ ] save (`.write`) file on disk
 - [ ] browse folders and files
 - [ ] create/delete folder (`os`, `sys`)
+- [ ] message box
+- [ ] error from server
 
 ## `PyQt5`
 
@@ -31,16 +33,13 @@ return {"message": "return from the server"}
 ```
 
 *file from client (upload)*
-*file from server (download)*
 
+*file from server (download)*
 Client
 ```python
-req = requests.post(url, json=dict_api)
-
+req = requests.get(url)
 filename = req.headers._store['content-disposition'][1].split("filename=")[1].replace('"','')
-
 file_path, _ = QFileDialog.getSaveFileName(self, 'Save Help', filename, 'pdf (*.pdf)')
-
 with open(file_path, 'wb') as file:
 	file.write(req.content)
 ```
