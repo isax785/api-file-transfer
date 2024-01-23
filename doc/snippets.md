@@ -30,6 +30,7 @@ dict_api = request.get_json()
 return {"message": "return from the server"}
 ```
 
+
 *file + dictionary from client*
 
 Client:
