@@ -26,6 +26,7 @@ def upload_dict():
 
 @app.route("/download_file", methods=['GET'])
 def download_file():
+    "simple download with "
     file_path = os.path.join(CUR_DIR, "res/download_from_server.txt")
     dt = datetime.now().strftime("%d%m%Y-%H%M%S")
     file_name = f"{dt} File from Server"
@@ -34,16 +35,61 @@ def download_file():
 
 @app.route("/upload_file", methods=['POST'])
 def upload_file():
-    pass
+    # TODO: retrieve filename
+    file = request.files['file'].read()
+    # file_path: where to save the file
+    # with open(file_path, "wb") as f:
+    #         f.write(file)
+    # os.remove(file_path) # remove the saved file
+
+    return {"message"}
 
 
 @app.route("/download_dict_file", methods=['GET'])
 def download_dict_file():
+    # 1. duplicate file to download
+    # 2. create file buffer for transfer
+    # 3. delete duplicated file
+    # 4. return response
+
+    # CUR_DIR = os.path.dirname(os.path.abspath(__file__))
+    # cur_dt =  datetime.now().strftime("%Y%m%d_%H%M%S") # formatted datetime
+
+    # file_name = f"{cur_dt}_custom_table.xlsx"
+    # export_folder = os.path.join(CUR_DIR, "src")
+    # file_path = os.path.join(export_folder,
+    #                         file_name)
+
+    # # template_file_content = open(template_file_path, 'rb').read()
+    
+    # # with open(file_path, 'wb') as f:
+    # #     f.write(template_file_content)
+
+    # compiled_table = CompiledCustomTable(template_file_path, 
+    #                                         ch_models_selected, 
+    #                                         export_folder)
+
+
+    # file = open(file_path, 'rb').read()
+
+    # # create a buffer of the file to be uploaded
+    # file_buffer = BytesIO()
+    # file_buffer.write(file)
+    # file_buffer.seek(0)  # Reset the buffer position to the beginning
+    
+    # os.remove(file_path) # delete the file
+
+    # return send_file(file_buffer, as_attachment=True, download_name=file_name)
+
     pass
 
 
 @app.route("/upload_dict_file", methods=['POST'])
 def upload_dict_file():
+    # 1. retieve both file and message
+    # 2. save the file with the time/date then delete it
+    # 2. return the message that confirms that everything has been received and the date/time filename
+
     pass
 
 

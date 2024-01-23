@@ -8,6 +8,7 @@
 - [ ] create/delete folder (`os`, `sys`)
 - [ ] message box
 - [ ] error from server
+- [ ] best practices (i.e. error management, confirmation messages)
 
 ## `PyQt5`
 

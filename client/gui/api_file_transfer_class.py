@@ -52,20 +52,40 @@ class MainWindow(QMainWindow):
 
     def download_file(self):
         req = requests.get(DWN_F_URL)
-        filename = req.headers._store['content-disposition'][1].split("filename=")[1].replace('"','')
-        file_path, _ = QFileDialog.getSaveFileName(self, 'Save Help', filename, 'txt (*.txt)')
+        file_name = req.headers._store['content-disposition'][1].split("filename=")[1].replace('"','')
+        file_path, _ = QFileDialog.getSaveFileName(self, 'Save Help', file_name, 'txt (*.txt)')
         with open(file_path, 'wb') as file:
             file.write(req.content)
 
     def upload_file(self):
         # upload any kind of file
-        req = requests.post(UP_F_URL)
-        pass
+        file_path, _ = QFileDialog.getOpenFileName(self, 'Open Any File', '', '*.* (*.*)')
+        files = {'file': open(file_path, 'rb')}
+
+        req = requests.post(UP_F_URL, files = files)
+
+        res = req.json()
+        self.ui.log_txt.setPlainText(res['message'])
 
     def download_dict_file(self):
         req = requests.post(DWN_DF_URL)
+
         pass
 
     def upload_dict_file(self):
         req = requests.post(UP_DF_URL)
+        # file_path, _ = QFileDialog.getOpenFileName(self, 'Open Custom Table', '', 'Excel Files (*.xlsx *.xls)')
+        # files = {'file': open(file_path, 'rb')}
+        # dict_api = {'dict_login': self.dict_login}
+        # data = {'dict_api': json.dumps(dict_api)}
+
+        # req = requests.post(url, 
+        #                     files = files, 
+        #                     data = data,
+        #                     )
+
+        # print(req) # D
+        # res = req.json()
+        # self.ch_models_custom = res['ch_models_custom']
+        
         pass
