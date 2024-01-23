@@ -30,6 +30,27 @@ dict_api = request.get_json()
 return {"message": "return from the server"}
 ```
 
+*file from client (upload)*
+*file from server (download)*
+
+Client
+```python
+req = requests.post(url, json=dict_api)
+
+filename = req.headers._store['content-disposition'][1].split("filename=")[1].replace('"','')
+
+file_path, _ = QFileDialog.getSaveFileName(self, 'Save Help', filename, 'pdf (*.pdf)')
+
+with open(file_path, 'wb') as file:
+	file.write(req.content)
+```
+
+Server
+```python
+file_path = "file\path\here"
+
+return send_file(file_path, as_attachment=True, download_name='File Name') 
+```
 
 *file + dictionary from client*
 
