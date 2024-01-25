@@ -32,7 +32,9 @@ A simple `GET` request is sent by the client and a `txt` file is downloaded by t
 
 Specs/Implementation:
 
-- client retrieves the filename from the response header
+- client 
+  - retrieves the filename from the response header;
+  - saves the file locally via the dedicated dialog.
 - server response with the file via `send_file` method (`flask` library)
 
 `@app.route("/upload_file", methods=['POST'])`
@@ -48,7 +50,8 @@ The response is then displayed by the *client log* text edit.
 Specs/Implementation:
 
 - client
-  - reads a file (`'rb'`) and stores it into a dictionary that will be the request `files`;
+  - loads a file via the dedicated dialog;
+  - reads the file (`'rb'`) and stores it into a dictionary that will be the request `files`;
   - stores the filepath into another dictionary that will be the request `headers`;
   - request includes `headers` and `files`;
   - reads the returned message by response `.json()`.
@@ -62,14 +65,22 @@ Specs/Implementation:
 
 Description:
 
-
+A `POST` request containing the text edited by the user is sent to the server from the client. The server creates a file `txt` including that text, hour, and date. Then transfers the file to the client together with a confirmation message that will be displayed
+The client saves the file locally, reads its content, and writes it into the *client log* text edit together with the server confirmation message.
 
 Specs/Implementation:
-
-
-
+- client
+  - attach the text into the request;
+  - r
+- server
+  - creates a file into a folder;
+  - the file content is the client text + hour annd date;
+  - the file is loaded by `ByteIO` to be transferred, then deleted;
+  - the file is transferred as bytes with a dictionary containing a message.
 
 `@app.route("/upload_dict_file", methods=['POST'])`
+
+*Like the previous, with the following variant: the client uploads a txt file and a message, the server appends the the message to the txt file. Then it's like the `download_dict_file*
 
 Description:
 
