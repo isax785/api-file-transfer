@@ -35,14 +35,19 @@ def download_file():
 
 @app.route("/upload_file", methods=['POST'])
 def upload_file():
-    # TODO: retrieve filename
-    file = request.files['file'].read()
-    # file_path: where to save the file
-    # with open(file_path, "wb") as f:
-    #         f.write(file)
-    # os.remove(file_path) # remove the saved file
+    try:
+        # TODO: retrieve filename
+        file = request.files['file'].read() # byte string literal content
+        filepath = request.headers.get('filename')
+        filename = filepath.split('/')[-1]
+        if filename == "":
+            return {"message": "No file was uploaded!"}
+        file_human = file.decode('utf-8') # decoding for human-readability
 
-    return {"message"}
+        return {"message": f"File {filename} received!\n\nContent:\n\n{str(file_human)}"}
+    
+    except Exception as e:
+        return {"message": f"Server error:\n{e}"}
 
 
 @app.route("/download_dict_file", methods=['GET'])
@@ -94,4 +99,5 @@ def upload_dict_file():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True) # autoupdate
+    # app.run() # for running debug (VSCode)

@@ -59,10 +59,13 @@ class MainWindow(QMainWindow):
 
     def upload_file(self):
         # upload any kind of file
-        file_path, _ = QFileDialog.getOpenFileName(self, 'Open Any File', '', '*.* (*.*)')
+        file_path, _ = QFileDialog.getOpenFileName(self, 'Text readable file', '', '*.txt; *.md; *.py')
         files = {'file': open(file_path, 'rb')}
+        headers = {'filename': file_path}
 
-        req = requests.post(UP_F_URL, files = files)
+        req = requests.post(UP_F_URL, 
+                            headers=headers,
+                            files=files)
 
         res = req.json()
         self.ui.log_txt.setPlainText(res['message'])

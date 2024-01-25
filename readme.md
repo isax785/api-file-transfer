@@ -11,8 +11,9 @@ Here:
 
 The application is under development, soon it will be completed!
 
-## Utilities
+## Documentation
 
-- <a href="./doc/snippets.md">Snippets</a>
+- <a href="./doc/00_overview.md">Overview</a>
+- <a href="./doc/09_snippets.md">Snippets</a>
 
 
