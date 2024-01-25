@@ -30,18 +30,19 @@ def download_file():
     file_path = os.path.join(CUR_DIR, "res/download_from_server.txt")
     dt = datetime.now().strftime("%d%m%Y-%H%M%S")
     file_name = f"{dt} File from Server"
+
     return send_file(file_path, as_attachment=True, download_name=file_name) 
 
 
 @app.route("/upload_file", methods=['POST'])
 def upload_file():
     try:
-        # TODO: retrieve filename
-        file = request.files['file'].read() # byte string literal content
         filepath = request.headers.get('filename')
         filename = filepath.split('/')[-1]
         if filename == "":
             return {"message": "No file was uploaded!"}
+        
+        file = request.files['file'].read() # byte string literal content 
         file_human = file.decode('utf-8') # decoding for human-readability
 
         return {"message": f"File {filename} received!\n\nContent:\n\n{str(file_human)}"}
