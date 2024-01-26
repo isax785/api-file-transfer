@@ -85,8 +85,8 @@ Specs/Implementation:
 - server
   - creates a file into a folder;
   - the file content is the client text + hour and date;
-  - the file is loaded by `ByteIO` to be transferred, then deleted;
-  - the file is transferred as bytes with a dictionary containing a message.
+  - ... to be continued ...
+
 
 # Upload Dictionary and File
 

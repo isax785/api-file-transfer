@@ -1,18 +1,8 @@
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
 from py.api_file_transfer import Ui_MainWindow
 import requests
+import base64
 
-# QPlainTextEdit
-# Widgets of interest:
-# self.ui.d_btn_dwn - dict
-# self.ui.d_btn_up
-# self.ui.d_txt
-# self.ui.f_btn_dwn - file
-# self.ui.f_btn_up
-# self.ui.df_btn_dwn - dict + file
-# self.ui.df_btn_up
-# self.ui.df_txt
-# self.ui.log_txt - log
 LOCALHOST = 'http://127.0.0.1:5000'
 DWN_D_URL = f"{LOCALHOST}/download_dict"
 UP_D_URL = f"{LOCALHOST}/upload_dict"
@@ -83,19 +73,25 @@ class MainWindow(QMainWindow):
             text = self.ui.df_text.toPlainText()
             req = requests.post(DWN_DF_URL, json={"text": text})
 
-            file_name = req.headers._store['content-disposition'][1].split("filename=")[1].replace('"','')
-            file_path, _ = QFileDialog.getSaveFileName(self, 'Save Help', file_name, 'txt (*.txt)')
-            with open(file_path, 'wb') as file:
-                file.write(req.content)
+            data = req.json()
+            file_name = data['filename']
 
-            data = req.json()['data']
+            file_path, _ = QFileDialog.getSaveFileName(self, 'Save Help', file_name, 'txt (*.txt)')
+
+            file_buffer = base64.b64decode(data['file_buffer'])
+
+            with open(file_path, 'wb') as file:
+                file.write(file_buffer)
+
             message = data["message"]
             self.ui.log_txt.setPlainText(message)
 
         except Exception as e:
-            print(f"Error: {e}")
-
-        pass
+            try:
+                message = f"Client Error: {e}\nServer Error: {req.json()['message']}\n"
+            except:
+                message = f"Client Error: {e}\n"
+            print(message)
 
     def upload_dict_file(self):
         req = requests.post(UP_DF_URL)

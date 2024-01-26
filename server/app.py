@@ -1,12 +1,16 @@
 from datetime import datetime
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file 
 import os
+import base64
 
 # LOCALHOST = return f'http://127.0.0.1:5000'
 
 CUR_DIR = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
+
+def formatted_datetime():
+    return datetime.now().strftime("%d%m%Y-%H%M%S")
 
 @app.route("/download_dict", methods=['GET'])
 def download_dict():
@@ -28,8 +32,7 @@ def upload_dict():
 def download_file():
     "simple download with "
     file_path = os.path.join(CUR_DIR, "res/download_from_server.txt")
-    dt = datetime.now().strftime("%d%m%Y-%H%M%S")
-    file_name = f"{dt} File from Server"
+    file_name = f"{formatted_datetime()} File from Server"
 
     return send_file(file_path, as_attachment=True, download_name=file_name) 
 
@@ -53,21 +56,46 @@ def upload_file():
 
 @app.route("/download_dict_file", methods=['POST'])
 def download_dict_file():
-    # 1. duplicate file to download
-    # 2. create file buffer for transfer
-    # 3. delete duplicated file
-    # 4. return response
-    # TODO: create custom file, uplod then delete it
     try:
-        file_path = os.path.join(CUR_DIR, "res/download_from_server.txt")
-        file_name = "download_from_server.txt"
-        response = send_file(file_path, as_attachment=True)
-        return_message = {"message": "from server!"}
+        text = request.get_json()['text']
+        dt = formatted_datetime()
 
-        return {'data': return_message}, 200, {'Content-Disposition': f'attachment; filename={file_name}'}
+        date = datetime.now().strftime("%d/%m/%Y")
+        time = datetime.now().strftime("%H:%M:%S")
+        text = f"File created by the server.\nDate: {date}\nTime: {time}\n\n" + "Here below the text sent by the client:\n\n" + text
+
+        file_folder = os.path.join(CUR_DIR, "res")
+        file_name = f"{dt}_server_file.txt"
+        file_path = os.path.join(file_folder, file_name)
+
+        with open(file_path, 'w') as f:
+            f.write(text)
+
+        print(f"File created: {file_name}")
+
+        with open(file_path, 'rb') as f:
+            file_content = f.read()
+
+        # Encode the file content as base64
+        encoded_content = base64.b64encode(file_content).decode('utf-8')
+
+        print("Buffer ready to be transferred.")
+
+        os.remove(file_path)
+
+        print(f"{file_name} deleted!")
+
+        return_message = "from server!"
+
+        response_data = {'file_buffer': encoded_content,
+                         'message': return_message,
+                         'filename': file_name
+                         }
+        
+        return response_data
 
     except Exception as e:
-        return {"message": f"Server error:\n{e}"}   
+        return {"message": f"{e}"}   
      
 
     # CUR_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -108,6 +136,21 @@ def upload_dict_file():
     # 2. save the file with the time/date then delete it
     # 2. return the message that confirms that everything has been received and the date/time filename
 
+    """
+    Client:
+        files = {'file': open(file_path, 'rb')}
+        dict_api = {'dict_login': self.dict_login}
+        data = {'dict_api': json.dumps(dict_api)}
+
+        req = requests.post(url, 
+                            files = files, 
+                            data = data,
+                            )
+
+    Server:
+        dict_api = json.loads(request.form['dict_api'])
+        file = request.files['file'].read()
+    """
     pass
 
 
