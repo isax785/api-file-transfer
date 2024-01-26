@@ -37,26 +37,38 @@ def download_file():
 @app.route("/upload_file", methods=['POST'])
 def upload_file():
     try:
-        filepath = request.headers.get('filename')
-        filename = filepath.split('/')[-1]
+        filename = request.headers.get('filename')
+        
         if filename == "":
             return {"message": "No file was uploaded!"}
         
         file = request.files['file'].read() # byte string literal content 
         file_human = file.decode('utf-8') # decoding for human-readability
 
-        return {"message": f"File {filename} received!\n\nContent:\n\n{str(file_human)}"}
+        return {"message": f"File '{filename}' received!\n\nContent:\n\n{str(file_human)}"}
     
     except Exception as e:
         return {"message": f"Server error:\n{e}"}
 
 
-@app.route("/download_dict_file", methods=['GET'])
+@app.route("/download_dict_file", methods=['POST'])
 def download_dict_file():
     # 1. duplicate file to download
     # 2. create file buffer for transfer
     # 3. delete duplicated file
     # 4. return response
+    # TODO: create custom file, uplod then delete it
+    try:
+        file_path = os.path.join(CUR_DIR, "res/download_from_server.txt")
+        file_name = "download_from_server.txt"
+        response = send_file(file_path, as_attachment=True)
+        return_message = {"message": "from server!"}
+
+        return {'data': return_message}, 200, {'Content-Disposition': f'attachment; filename={file_name}'}
+
+    except Exception as e:
+        return {"message": f"Server error:\n{e}"}   
+     
 
     # CUR_DIR = os.path.dirname(os.path.abspath(__file__))
     # cur_dt =  datetime.now().strftime("%Y%m%d_%H%M%S") # formatted datetime
@@ -100,5 +112,5 @@ def upload_dict_file():
 
 
 if __name__ == "__main__":
-    app.run(debug=True) # autoupdate
-    # app.run() # for running debug (VSCode)
+    # app.run(debug=True) # autoupdate
+    app.run() # for running debug (VSCode)

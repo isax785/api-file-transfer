@@ -2,6 +2,8 @@
 
 Here below a brief description of the implemented APIs, including their usage and the specs.
 
+## Download Dictionary
+
 `@app.route("/download_dict", methods=['GET'])`
 
 Description:
@@ -11,6 +13,8 @@ A simple `GET` request is sent by the client, and a message including datetime i
 Specs/Implementation:
 
 - server response is a dictionary 
+
+## Upload Dictionary
 
 `@app.route("/upload_dict", methods=['POST'])`
 
@@ -23,6 +27,7 @@ Specs/Implementation:
 - client request contains a dictionary as `json`
 - server response is a dictionary
 
+## Download File
 
 `@app.route("/download_file", methods=['GET'])`
 
@@ -36,6 +41,8 @@ Specs/Implementation:
   - retrieves the filename from the response header;
   - saves the file locally via the dedicated dialog.
 - server response with the file via `send_file` method (`flask` library)
+
+## Upload File
 
 `@app.route("/upload_file", methods=['POST'])`
 
@@ -61,7 +68,9 @@ Specs/Implementation:
   - returns the message to the client into a dictionary.
 - exception handling and message returning the same dictionary structure.
 
-`@app.route("/download_dict_file", methods=['GET'])`
+# Download Dictionary and File
+
+`@app.route("/download_dict_file", methods=['POST'])`
 
 Description:
 
@@ -70,20 +79,22 @@ The client saves the file locally, reads its content, and writes it into the *cl
 
 Specs/Implementation:
 - client
-  - attach the text into the request;
-  - r
+  - attaches the text into the request as `json`;
+  - retrieves the returned message from the response and displays it into the *client log* text edit;
+  - reads the file from the response and saves it.
 - server
   - creates a file into a folder;
-  - the file content is the client text + hour annd date;
+  - the file content is the client text + hour and date;
   - the file is loaded by `ByteIO` to be transferred, then deleted;
   - the file is transferred as bytes with a dictionary containing a message.
+
+# Upload Dictionary and File
 
 `@app.route("/upload_dict_file", methods=['POST'])`
 
 *Like the previous, with the following variant: the client uploads a txt file and a message, the server appends the the message to the txt file. Then it's like the `download_dict_file*
 
 Description:
-
 
 
 Specs/Implementation:
