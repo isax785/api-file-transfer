@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog
 from py.api_file_transfer import Ui_MainWindow
 import requests
 import base64
+import json
 
 LOCALHOST = 'http://127.0.0.1:5000'
 DWN_D_URL = f"{LOCALHOST}/download_dict"
@@ -94,19 +95,30 @@ class MainWindow(QMainWindow):
             print(message)
 
     def upload_dict_file(self):
-        req = requests.post(UP_DF_URL)
-        # file_path, _ = QFileDialog.getOpenFileName(self, 'Open Custom Table', '', 'Excel Files (*.xlsx *.xls)')
-        # files = {'file': open(file_path, 'rb')}
-        # dict_api = {'dict_login': self.dict_login}
-        # data = {'dict_api': json.dumps(dict_api)}
+        try:
+            file_path, _ = QFileDialog.getOpenFileName(self, 'Open File', '', '*.txt *.md *.py')
+            files = {'file': open(file_path, 'rb')}
 
-        # req = requests.post(url, 
-        #                     files = files, 
-        #                     data = data,
-        #                     )
+            file_name = file_path.split('/')[-1]
+            headers = {'filename': file_name}
+            
+            text = self.ui.df_text.toPlainText()
+            data = {'text': text}
+            data = {'data': json.dumps(data)}
 
-        # print(req) # D
-        # res = req.json()
-        # self.ch_models_custom = res['ch_models_custom']
+            req = requests.post(UP_DF_URL, 
+                                files = files,
+                                headers=headers, 
+                                data = data,
+                                )
+
+            data = req.json()
+            message = data["message"]
+            self.ui.log_txt.setPlainText(message)
         
-        pass
+        except Exception as e:
+            try:
+                message = f"Client Error: {e}\nServer Error: {req.json()['message']}\n"
+            except:
+                message = f"Client Error: {e}\n"
+            print(message)

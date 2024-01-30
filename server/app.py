@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import Flask, request, send_file 
 import os
 import base64
+import json
 
 # LOCALHOST = return f'http://127.0.0.1:5000'
 
@@ -79,7 +80,7 @@ def download_dict_file():
         # Encode the file content as base64
         encoded_content = base64.b64encode(file_content).decode('utf-8')
 
-        print("Buffer ready to be transferred.")
+        print("File ready to be transferred.")
 
         os.remove(file_path)
 
@@ -97,63 +98,21 @@ def download_dict_file():
     except Exception as e:
         return {"message": f"{e}"}   
      
-
-    # CUR_DIR = os.path.dirname(os.path.abspath(__file__))
-    # cur_dt =  datetime.now().strftime("%Y%m%d_%H%M%S") # formatted datetime
-
-    # file_name = f"{cur_dt}_custom_table.xlsx"
-    # export_folder = os.path.join(CUR_DIR, "src")
-    # file_path = os.path.join(export_folder,
-    #                         file_name)
-
-    # # template_file_content = open(template_file_path, 'rb').read()
-    
-    # # with open(file_path, 'wb') as f:
-    # #     f.write(template_file_content)
-
-    # compiled_table = CompiledCustomTable(template_file_path, 
-    #                                         ch_models_selected, 
-    #                                         export_folder)
-
-
-    # file = open(file_path, 'rb').read()
-
-    # # create a buffer of the file to be uploaded
-    # file_buffer = BytesIO()
-    # file_buffer.write(file)
-    # file_buffer.seek(0)  # Reset the buffer position to the beginning
-    
-    # os.remove(file_path) # delete the file
-
-    # return send_file(file_buffer, as_attachment=True, download_name=file_name)
-
-    pass
-
-
 @app.route("/upload_dict_file", methods=['POST'])
 def upload_dict_file():
-    # 1. retieve both file and message
-    # 2. save the file with the time/date then delete it
-    # 2. return the message that confirms that everything has been received and the date/time filename
-
-    """
-    Client:
-        files = {'file': open(file_path, 'rb')}
-        dict_api = {'dict_login': self.dict_login}
-        data = {'dict_api': json.dumps(dict_api)}
-
-        req = requests.post(url, 
-                            files = files, 
-                            data = data,
-                            )
-
-    Server:
-        dict_api = json.loads(request.form['dict_api'])
+    try:
+        data = json.loads(request.form['data'])
+        text = data['text']
         file = request.files['file'].read()
-    """
-    pass
+        filename = request.headers.get('filename')
+        file_human = file.decode('utf-8')
+
+        message = f"Client message:\n\n{text}\n\nFile name: {filename}\n\nFile content:\n\n{file_human}"
+        return {"message": message} 
+    except Exception as e:
+        return {"message": f"{e}"} 
 
 
 if __name__ == "__main__":
-    # app.run(debug=True) # autoupdate
+    # app.run(debug=True) # autoupdate for debugging purposes
     app.run() # for running debug (VSCode)

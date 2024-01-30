@@ -83,21 +83,32 @@ Specs/Implementation:
   - retrieves the returned message from the response and displays it into the *client log* text edit;
   - reads the file from the response and saves it.
 - server
-  - creates a file into a folder;
-  - the file content is the client text + hour and date;
-  - ... to be continued ...
+  - creates a file into a folder with datetime into the name;
+  - the file is written: it contains a message with the client text + hour and date;
+  - the file is loaded and encoded (`base64`), allowing to delete the file
+  - both the file and the message are transferred by a `json`
 
 
 # Upload Dictionary and File
 
 `@app.route("/upload_dict_file", methods=['POST'])`
 
-*Like the previous, with the following variant: the client uploads a txt file and a message, the server appends the the message to the txt file. Then it's like the `download_dict_file*
-
 Description:
 
+A `POST` request containing the text edited by the user is sent to the server from the client together with a file. The server reads both the text and the file and returns a message that is the composition of the client message and the file content. The client reads the server message and writes it into the *client log* text edit.
 
 Specs/Implementation:
+
+- client
+  - attaches the text into the request as `json`;
+  - reads the file and attaches its content (bytes) into a json;
+  - send the filename writing it into the header;
+  - writes the server message into the *client log*;
+- server
+  - reads the client message from the `json`;
+  - reads the filename from the header;
+  - reads the file content by decoding it into a human readable format;
+  - composes and returns the message.
 
 
 
