@@ -7,15 +7,15 @@ Main specs:
 - Client: gui implemented in `PyQt5` using `requests` library for the API calls;
 - Server: a `flask` server implementing RESTful APIs.
 
-The application is under development, soon it will be completed!
+![](doc/img_md/2024-01-30-17-16-54.png)
 
 ## Documentation
 
 - <a href="./doc/00_overview.md">Overview</a>
-- <a href="./doc/09_snippets.md">Snippets</a>
+- <a href="./doc/01_guidelines.md">Guidelines</a>
+- <a href="./doc/02_snippets_python.md">Snippets `Python`</a>
+- <a href="./doc/03_snippets_flask.md">Snippets `flask`</a>
+- <a href="./doc/04_snippets_pyqt5.md">Snippets `PyQt5`</a>
 
-- code extracts
-- guidelines (error handling, others?)
-- other snippets - toolbox
 
 

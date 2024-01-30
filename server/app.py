@@ -46,8 +46,8 @@ def upload_file():
         if filename == "":
             return {"message": "No file was uploaded!"}
         
-        file = request.files['file'].read() # byte string literal content 
-        file_human = file.decode('utf-8') # decoding for human-readability
+        file = request.files['file'].read() # <class 'bytes'>
+        file_human = file.decode('utf-8') # <class 'str'>
 
         return {"message": f"File '{filename}' received!\n\nContent:\n\n{str(file_human)}"}
     
@@ -58,15 +58,14 @@ def upload_file():
 @app.route("/download_dict_file", methods=['POST'])
 def download_dict_file():
     try:
+        # request.get_json() # <class 'dict'>
+        # request.get_data() # <class 'bytes'>
         text = request.get_json()['text']
-        dt = formatted_datetime()
 
-        date = datetime.now().strftime("%d/%m/%Y")
-        time = datetime.now().strftime("%H:%M:%S")
-        text = f"File created by the server.\nDate: {date}\nTime: {time}\n\n" + "Here below the text sent by the client:\n\n" + text
+        text = f"File created by the server.\nDate: {datetime.now().strftime('%d/%m/%Y')}\nTime: {datetime.now().strftime('%H:%M:%S')}\n\n" + "Here below the text sent by the client:\n\n" + text
 
         file_folder = os.path.join(CUR_DIR, "res")
-        file_name = f"{dt}_server_file.txt"
+        file_name = f"{formatted_datetime()}_server_file.txt"
         file_path = os.path.join(file_folder, file_name)
 
         with open(file_path, 'w') as f:
@@ -75,9 +74,11 @@ def download_dict_file():
         print(f"File created: {file_name}")
 
         with open(file_path, 'rb') as f:
-            file_content = f.read()
+            file_content = f.read() # <class 'bytes'>
 
-        # Encode the file content as base64
+        # human_readable = file_content.decode('utf-8') # <class 'str'>
+
+        # Encode the file content <class 'bytes'> as base64 <class 'str'>
         encoded_content = base64.b64encode(file_content).decode('utf-8')
 
         print("File ready to be transferred.")
@@ -101,11 +102,12 @@ def download_dict_file():
 @app.route("/upload_dict_file", methods=['POST'])
 def upload_dict_file():
     try:
-        data = json.loads(request.form['data'])
+        # request.form['data'] <class 'str'>
+        data = json.loads(request.form['data']) # <class 'dict'>
         text = data['text']
-        file = request.files['file'].read()
+        file_content = request.files['file'].read() # <class 'bytes'>
         filename = request.headers.get('filename')
-        file_human = file.decode('utf-8')
+        file_human = file_content.decode('utf-8') # <class 'str'>
 
         message = f"Client message:\n\n{text}\n\nFile name: {filename}\n\nFile content:\n\n{file_human}"
         return {"message": message} 
