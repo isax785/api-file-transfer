@@ -82,7 +82,7 @@ class MainWindow(QMainWindow):
             # type(data['file_buffer']) => <class 'str'>
             # data['file_buffer'] = 'RmlsZSBjcmVhdGVkIGJ5IH...
 
-            # decode the base64 string into <class 'bytes'>
+            # decode the base64 <class 'str'> into <class 'bytes'>
             file_buffer = base64.b64decode(data['file_buffer'])
 
             human_readable = file_buffer.decode('utf-8') # 'File created by ... => <class 'str'>

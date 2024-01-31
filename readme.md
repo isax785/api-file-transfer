@@ -9,13 +9,15 @@ Main specs:
 
 ![](doc/img_md/2024-01-30-17-16-54.png)
 
-## Documentation
+What you will find in this repo:
+
+- an easy-to-reuse `PyQt` application structure;
+- 
+
+## Other Documents
 
 - <a href="./doc/00_overview.md">Overview</a>
 - <a href="./doc/01_guidelines.md">Guidelines</a>
 - <a href="./doc/02_snippets_python.md">Snippets `Python`</a>
 - <a href="./doc/03_snippets_flask.md">Snippets `flask`</a>
 - <a href="./doc/04_snippets_pyqt5.md">Snippets `PyQt5`</a>
-
-
-

@@ -1,4 +1,6 @@
-- [ ] split **Snippets** into multiple sections
+# Tasks
+
+- [x] split **Snippets** into multiple sections
 
 - [ ] load file from folder
 - [ ] save (`.write`) file on disk
