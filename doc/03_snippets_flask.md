@@ -1,7 +1,45 @@
 # Snippets `flask`
 
+Basic snippets for the implementation of APIs functionalities.
+
+All the APIs are described from the *Client* side.
+
+## Packages
+
+Client:
+
+```python
+import os
+import requests
+import base64
+import json
+```
+
+Server:
+
+```python
+import os
+from flask import Flask, request, send_file 
+import base64
+import json
+```
+
+# Upload
+
+**Dictionary**
+
+**File**
+
+**Dictionary + File**
 
 
+# Download
+
+**Dictionary**
+
+**File**
+
+**Dictionary + File**
 
 ## `requests`
 
