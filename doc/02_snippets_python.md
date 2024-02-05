@@ -103,3 +103,7 @@ file_buffer = base64.b64decode(encoded_content)
 human_readable = file_buffer.decode('utf-8') # 'File created by ... => <class 'str'>
 
 ```
+
+---
+
+<a href="./../readme.md.md"><< To Index</a>

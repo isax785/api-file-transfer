@@ -1,8 +1,8 @@
 # Snippets `flask`
 
-Basic snippets for the implementation of APIs functionalities.
+> All the APIs are viewed (i.e. download/upload) from the *Client*'s side.
 
-All the APIs are described from the *Client* side.
+Basic snippets for the implementation of APIs functionalities: the examples below deal with a single dictionary and / or a single file. The approach can be easily extended to multiple dictionaries/files in order to increase the number of transferred information.
 
 ## Packages
 
@@ -24,106 +24,160 @@ import base64
 import json
 ```
 
-# Upload
+## Download
 
-**Dictionary**
-
-**File**
-
-**Dictionary + File**
-
-
-# Download
-
-**Dictionary**
-
-**File**
-
-**Dictionary + File**
-
-## `requests`
-
-*dictionary only*
+### Dictionary
 
 Client:
 
 ```python
-req = requests.post(url, json=dict_api)
-res = req.json()
-print(res["message"])
+req = requests.get(DWN_D_URL)
+res = req.json()  # {'message': message}
 ```
 
-Server: 
+Server:
+
 ```python
-dict_api = request.get_json()
-return {"message": "return from the server"}
+return {'message': message}
 ```
 
-*file from client (upload)*
+### File
 
-*file from server (download)*
-Client
+Client:
+
 ```python
-req = requests.get(url)
-filename = req.headers._store['content-disposition'][1].split("filename=")[1].replace('"','')
-file_path, _ = QFileDialog.getSaveFileName(self, 'Save Help', filename, 'pdf (*.pdf)')
+req = requests.get(DWN_F_URL)
+
+file_name = req.headers._store['content-disposition'][1].split("filename=")[1].replace('"','') # retrieve the filename
+
+file_path = f"{file_name}.txt"
+
 with open(file_path, 'wb') as file:
 	file.write(req.content)
 ```
 
-Server
-```python
-file_path = "file\path\here"
+Server:
 
-return send_file(file_path, as_attachment=True, download_name='File Name') 
+```python
+return send_file(file_path, as_attachment=True, download_name=file_name) 
 ```
 
-*file + dictionary from client*
+### Dictionary + File
+
+> The file transferred from the server can also be deleted.
 
 Client:
+
 ```python
-file_path, _ = QFileDialog.getOpenFileName(self, 'Choose Excel File', '', 'Excel Files (*.xlsx *.xls)')
-files = {'file': open(file_path, 'rb')}
-dict_api = {'dict_login': self.dict_login}
-data = {'dict_api': json.dumps(dict_api)}
+req = requests.post(DWN_DF_URL, json={"text": text})
 
-req = requests.post(url, 
-					files = files, 
-					data = data,
-					)
-
+data = req.json()
 ```
 
 Server:
+
 ```python
-dict_api = json.loads(request.form['dict_api'])
-file = request.files['file']
-file_content = file.read()
+text = request.get_json()['text']
+
+with open(file_path, 'rb') as f:
+            file_content = f.read() # <class 'bytes'>
+
+# human_readable = file_content.decode('utf-8') # <class 'str'>
+
+# Encode the file content <class 'bytes'> as base64 <class 'str'>
+encoded_content = base64.b64encode(file_content).decode('utf-8')
+
+print("File ready to be transferred.")
+
+os.remove(file_path) # 
+
+print(f"{file_name} deleted!")
+
+response_data = {'file_buffer': encoded_content,
+				 'message': "from server!",
+				 'filename': file_name
+				 }
+
+return response_data
 ```
 
-*file + dictionary* from server
-- [ ] `???` check reliability
+## Upload
 
-Client
+### Dictionary
+
+Client:
+
 ```python
-file_path, _ = QFileDialog.getSaveFileName(self, 'Save Excel File', '', 'Excel Files (*.xlsx)')
-response = requests.get(url)
-local_file_path = 'downloaded_file.txt'
-with open(local_file_path, 'wb') as local_file:
-	local_file.write(response.content)
-		
-json_data = response.json() # Load the JSON data from the response
+req = requests.post(UP_D_URL, json={"text": text})
+res = req.json() # {'message': message}
 ```
 
-Server
+Server:
+
 ```python
-sample_file_path = 'sample_file.txt'
-with open(sample_file_path, 'w') as file:
-	file.write('This is a sample file content.')
-
-sample_data = {'key1': 'value1', 'key2': 'value2'}
-response = send_file(sample_file_path, as_attachment=True)
-os.remove(sample_file_path)
-
-return jsonify({'data': sample_data}), 200, {'Content-Disposition': 'attachment; filename=sample_file.txt'}
+req = request.get_json() # {"text": text}
+...
+return {'message': message}
 ```
+
+### File
+
+Client:
+
+```python
+files = {'file': open(file_path, 'rb')}
+headers = {'filename': file_name}
+
+req = requests.post(UP_F_URL, 
+					headers=headers,
+					files=files)
+
+res = req.json()
+```
+
+Server:
+
+```python
+filename = request.headers.get('filename')
+file = request.files['file'].read() # <class 'bytes'>
+        file_human = file.decode('utf-8') # <class 'str'>
+
+return {"message": "Message from the server"}
+```
+
+### Dictionary + File
+
+Client:
+
+```python
+files = {'file': open(file_path, 'rb')}
+headers = {'filename': file_name}
+data = {'text': text}
+data = {'data': json.dumps(data)}
+
+req = requests.post(UP_DF_URL, 
+					files = files,
+					headers=headers, 
+					data = data,
+					)
+
+data = req.json()
+```
+
+Server:
+
+```python
+data = json.loads(request.form['data']) # <class 'dict'> {'text': text}
+text = data['text']
+
+file_content = request.files['file'].read() # <class 'bytes'>
+filename = request.headers.get('filename')
+
+file_human = file_content.decode('utf-8') # <class 'str'> human readable
+
+return {"message": message} 
+```
+
+---
+
+<a href="./../readme.md.md"><< To Index</a>

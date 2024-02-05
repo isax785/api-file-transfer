@@ -2,67 +2,6 @@
 
 A useful toolbox for a lightweight `PyQt5` implementation.
 
-## Basic Architecture
-
-Folder structure:
-
-```
-client
-╠ gui
-║	╠ py
-║	║  ╠ mainWindow.py 
-║	║  ╚ res_rc.py	
-║	╠ res
-║	║  ╠ image.png
-║	║  ╚ res.qrc 
-║	╠ ui
-║	║  ╚ mainWindow.ui
-║	╚ mainWindow_class.py
-╚ main.py
-```
-
-`main.py`
-
-```python
-import sys, os
-sys.path.extend([os.path.join(os.path.dirname(os.path.abspath(__file__)), "gui")])
-
-from PyQt5.QtWidgets import QApplication
-from gui.mainwindow_class import MainWindow
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    ui = Untitled()
-    sys.exit(app.exec_())
-```
-
-`gui/mainWindowClass.py`
-
-A window with a push button and a text cell. When the button is clicked, a text is written into the text cell.
-
-```python
-from PyQt5.QtWidgets import QMainWindow
-from mainWindow import Ui_MainWindow
-
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
-        self.show()
-        self.set_push_button_name()
-        self.ui.pushButton.clicked.connect(self.printout)
-
-    def set_push_button_name(self):
-	    "Change push button name"
-        self.ui.pushButton.setText("Button Name")
-
-    def printout(self):
-	    "Write into text cell"
-        print("executed") # console printout
-        self.ui.textEdit.setText("Push button text.")
-```
 
 ## Sender
 
@@ -257,7 +196,6 @@ if color.isValid():
 	self.line_edit.setStyleSheet(f'color: {color.name()}')
 ```
 
-
 ### `PushButton`
 
 ```python
@@ -275,3 +213,21 @@ btn.clicked.connect(self.close)
 QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
 QApplication.restoreOverrideCursor()
 ```
+
+## `FileDialog`
+
+```python
+from PyQt5.QtWidgets import QFileDialog
+
+...
+
+# Save file
+file_path, _ = QFileDialog.getSaveFileName(self, 'Save Help', file_name, 'txt (*.txt)')
+
+# Open file
+file_path, _ = QFileDialog.getOpenFileName(self, 'Text readable file', '', '*.txt *.md *.py')
+```
+
+---
+
+<a href="./../readme.md.md"><< To Index</a>
