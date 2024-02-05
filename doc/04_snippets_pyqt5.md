@@ -230,4 +230,4 @@ file_path, _ = QFileDialog.getOpenFileName(self, 'Text readable file', '', '*.tx
 
 ---
 
-<a href="./../readme.md.md"><< To Index</a>
+<a href="./../readme.md"><< To Index</a>
