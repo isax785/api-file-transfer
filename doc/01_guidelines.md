@@ -66,6 +66,43 @@ class MainWindow(QMainWindow):
         self.ui.textEdit.setText("Push button text.")
 ```
 
+## Directory Path
+
+when dealing with files and path it is always useful to have the availability of the current file directory path:
+
+```python
+import os
+
+CUR_DIR = os.path.dirname(os.path.abspath(__file__))
+```
+## Create, Load, and Delete File
+
+On any side (i.e. client or server) for transferring a file to be deleted:
+
+```python
+file_folder = os.path.join(CUR_DIR, "res")
+file_name = f"{formatted_datetime()}_server_file.txt"
+file_path = os.path.join(file_folder, file_name)
+
+with open(file_path, 'w') as f:
+    f.write(text)
+
+print(f"File created: {file_name}")
+
+with open(file_path, 'rb') as f:
+    file_content = f.read() # <class 'bytes'>
+
+# Encode the file content <class 'bytes'> as base64 <class 'str'>
+encoded_content = base64.b64encode(file_content).decode('utf-8')
+
+print("File ready to be transferred.")
+
+os.remove(file_path)
+
+print(f"{file_name} deleted!")
+
+return_message = "from server!"
+```
 
 ## APIs Error Handling
 
