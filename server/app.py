@@ -1,10 +1,17 @@
 from datetime import datetime
-from flask import Flask, request
+from flask import Flask, request, send_file 
+import os
+import base64
+import json
 
 # LOCALHOST = return f'http://127.0.0.1:5000'
 
+CUR_DIR = os.path.dirname(os.path.abspath(__file__))
+
 app = Flask(__name__)
 
+def formatted_datetime():
+    return datetime.now().strftime("%d%m%Y-%H%M%S")
 
 @app.route("/download_dict", methods=['GET'])
 def download_dict():
@@ -24,23 +31,90 @@ def upload_dict():
 
 @app.route("/download_file", methods=['GET'])
 def download_file():
-    pass
+    "simple download with "
+    file_path = os.path.join(CUR_DIR, "res/download_from_server.txt")
+    file_name = f"{formatted_datetime()} File from Server"
+
+    return send_file(file_path, as_attachment=True, download_name=file_name) 
 
 
 @app.route("/upload_file", methods=['POST'])
 def upload_file():
-    pass
+    try:
+        filename = request.headers.get('filename')
+        
+        if filename == "":
+            return {"message": "No file was uploaded!"}
+        
+        file = request.files['file'].read() # <class 'bytes'>
+        file_human = file.decode('utf-8') # <class 'str'>
+
+        return {"message": f"File '{filename}' received!\n\nContent:\n\n{str(file_human)}"}
+    
+    except Exception as e:
+        return {"message": f"Server error:\n{e}"}
 
 
-@app.route("/download_dict_file", methods=['GET'])
+@app.route("/download_dict_file", methods=['POST'])
 def download_dict_file():
-    pass
+    try:
+        # request.get_json() # <class 'dict'>
+        # request.get_data() # <class 'bytes'>
+        text = request.get_json()['text']
 
+        text = f"File created by the server.\nDate: {datetime.now().strftime('%d/%m/%Y')}\nTime: {datetime.now().strftime('%H:%M:%S')}\n\n" + "Here below the text sent by the client:\n\n" + text
 
+        file_folder = os.path.join(CUR_DIR, "res")
+        file_name = f"{formatted_datetime()}_server_file.txt"
+        file_path = os.path.join(file_folder, file_name)
+
+        with open(file_path, 'w') as f:
+            f.write(text)
+
+        print(f"File created: {file_name}")
+
+        with open(file_path, 'rb') as f:
+            file_content = f.read() # <class 'bytes'>
+
+        # human_readable = file_content.decode('utf-8') # <class 'str'>
+
+        # Encode the file content <class 'bytes'> as base64 <class 'str'>
+        encoded_content = base64.b64encode(file_content).decode('utf-8')
+
+        print("File ready to be transferred.")
+
+        os.remove(file_path)
+
+        print(f"{file_name} deleted!")
+
+        return_message = "from server!"
+
+        response_data = {'file_buffer': encoded_content,
+                         'message': return_message,
+                         'filename': file_name
+                         }
+        
+        return response_data
+
+    except Exception as e:
+        return {"message": f"{e}"}   
+     
 @app.route("/upload_dict_file", methods=['POST'])
 def upload_dict_file():
-    pass
+    try:
+        # request.form['data'] <class 'str'>
+        data = json.loads(request.form['data']) # <class 'dict'>
+        text = data['text']
+        file_content = request.files['file'].read() # <class 'bytes'>
+        filename = request.headers.get('filename')
+        file_human = file_content.decode('utf-8') # <class 'str'>
+
+        message = f"Client message:\n\n{text}\n\nFile name: {filename}\n\nFile content:\n\n{file_human}"
+        return {"message": message} 
+    except Exception as e:
+        return {"message": f"{e}"} 
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # app.run(debug=True) # autoupdate for debugging purposes
+    app.run() # for running debug (VSCode)
