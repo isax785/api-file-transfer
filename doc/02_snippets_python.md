@@ -106,4 +106,4 @@ human_readable = file_buffer.decode('utf-8') # 'File created by ... => <class 's
 
 ---
 
-<a href="./../readme.md.md"><< To Index</a>
+<a href="./../readme.md"><< To Index</a>

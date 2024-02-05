@@ -25,7 +25,7 @@ def download_dict():
 def upload_dict():
     req = request.get_json()
     text = req['text']
-    message = f"Your message '{text}' was rd by the server and returned."
+    message = f"Your message '{text}' was read by the server and returned."
     return {'message': message}
 
 
