@@ -52,7 +52,7 @@ def upload_file():
         return {"message": f"File '{filename}' received!\n\nContent:\n\n{str(file_human)}"}
     
     except Exception as e:
-        return {"message": f"Server error:\n{e}"}
+        return {"error": f"Server error:\n{e}"}
 
 
 @app.route("/download_dict_file", methods=['POST'])
@@ -97,7 +97,7 @@ def download_dict_file():
         return response_data
 
     except Exception as e:
-        return {"message": f"{e}"}   
+        return {"error": f"{e}"}   
      
 @app.route("/upload_dict_file", methods=['POST'])
 def upload_dict_file():
@@ -112,7 +112,7 @@ def upload_dict_file():
         message = f"Client message:\n\n{text}\n\nFile name: {filename}\n\nFile content:\n\n{file_human}"
         return {"message": message} 
     except Exception as e:
-        return {"message": f"{e}"} 
+        return {"error": f"{e}"} 
 
 
 if __name__ == "__main__":

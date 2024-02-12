@@ -124,7 +124,7 @@ class MainWindow(QMainWindow):
         
         except Exception as e:
             try:
-                message = f"Client Error: {e}\nServer Error: {req.json()['message']}\n"
+                message = f"Client Error: {e}\nServer Error: {req.json()['error']}\n"
             except:
                 message = f"Client Error: {e}\n"
             print(message)
